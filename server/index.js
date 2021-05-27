@@ -9,8 +9,8 @@ const PORT = 4200
 app.listen(PORT, () => console.log(`Server is barking on port ${PORT}`))
 
 //Get all points
-app.post('/api/newPoints', pointCtrl.newPoints)
-app.post('/api/getPoints', pointCtrl.getPoints)
+app.post('/api/newPoints', pointCtrl.newPoints)             //Post controller newPoints
+app.post('/api/getPoints', pointCtrl.getPoints)             //Post getPoints
 
 
 

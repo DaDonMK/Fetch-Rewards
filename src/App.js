@@ -3,8 +3,10 @@ import {Component} from 'react'
 import axios from 'axios'
 import DateandTime from './components/DateandTime';
 import DateTimePicker from 'react-datetime-picker';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 
-
+toast.configure()
 export default class App extends Component{
 
   constructor(){
@@ -13,8 +15,7 @@ export default class App extends Component{
     this.state = {      //all state variables
       points: 0,       //ADD TRANSACTION: points
       payer: '',       //ADD TRANSACTION: payer
-      time: 0,        //ADD TRANSACTION: time
-      time2: new Date(),
+      time2: new Date(),    //Date variable
       pointsOff: 0,    //ADD TRANSACTION: pointsTakingOff
       balance: 0,
       finalDisplay: []
@@ -43,28 +44,29 @@ export default class App extends Component{
       console.log(res.data)
       this.setState({balance: res.data})
     })
+    toast.success('TRANSACTION SENT')
   }
 
-  getBalance(){
-    axios.post('/api/getPoints', {pointsOff: this.state.pointsOff})
-    .then(res => {
-      this.setState({finalDisplay: res.data})
-      console.log(this.state.finalDisplay)
-      // this.setState({finalDisplay: res.data})
-    })
+  async getBalance(){           //Removes points function
+    let res = await axios.post('/api/getPoints', {pointsOff: this.state.pointsOff})     //await request to server
+      this.setState({finalDisplay: res.data})                 //stores response to finalDisplay
+      console.log(this.state.finalDisplay)        
+      if(this.state.finalDisplay[0] === 'Not enough points'){
+        toast.error('NOT ENOUGH POINTS')
+      }else{
+        toast.success('POINTS REMOVED')
+      }
 
   }
 
   Time = (inp) => {
-    // let time = new Date(inp).toLocaleString() 
     this.setState({time2: inp})
-    console.log(this.state.time2)
-    // console.log(time)
+    console.log(this.state.time2)       //Sets time in time2 state variable           
   }
 
 
   pointsOff = (inp) => {
-    this.setState({pointsOff: inp})
+    this.setState({pointsOff: inp})     //Sets points off from input to state variable
   }
 
   render(){
@@ -76,10 +78,10 @@ export default class App extends Component{
     
           <DateTimePicker
             onChange={this.Time}
-            value={this.state.time2}
-            width={200}
+            value={this.state.time2}  
+            width={200}                       //Date set input field
           />
-        {console.log(this.state.time2)}
+        {console.log(this.state.time2)} 
         <div className='btn-section'>
           <button className='add-btn' onClick={this.sendBalance}>Add Transaction</button>
         </div>
@@ -90,13 +92,12 @@ export default class App extends Component{
           <div className='btn-section'>
             <button className='add-btn' onClick={this.getBalance}>
               Points
-            </button>
+            </button> 
           </div>
         </section>
-        <div className='btn-section'>
-          <DateandTime finalDisplay={this.state.finalDisplay}/>
+        <div className='btn-section'>   
+          <DateandTime finalDisplay={this.state.finalDisplay}/>        
         </div>
-        {/* {this.state.finalDisplay} */}
 
       </div>
     )
