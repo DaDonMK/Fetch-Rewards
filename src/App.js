@@ -93,7 +93,9 @@ export default class App extends Component{
             </button>
           </div>
         </section>
-        <DateandTime finalDisplay={this.state.finalDisplay}/>
+        <div className='btn-section'>
+          <DateandTime finalDisplay={this.state.finalDisplay}/>
+        </div>
         {/* {this.state.finalDisplay} */}
 
       </div>
